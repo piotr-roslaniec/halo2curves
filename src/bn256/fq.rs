@@ -41,7 +41,7 @@ const MODULUS: Fq = Fq([
 ]);
 
 /// The modulus as u32 limbs.
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 const MODULUS_LIMBS_32: [u32; 8] = [
     0xd87c_fd47,
     0x3c20_8c16,
@@ -150,9 +150,9 @@ field_arithmetic!(Fq, MODULUS, INV, sparse);
 #[cfg(feature = "asm")]
 field_arithmetic_asm!(Fq, MODULUS, INV);
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(target_pointer_width = "64", not(feature = "force-u32")))]
 field_bits!(Fq, MODULUS);
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 field_bits!(Fq, MODULUS, MODULUS_LIMBS_32);
 
 impl Fq {

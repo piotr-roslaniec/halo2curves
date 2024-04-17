@@ -40,7 +40,7 @@ const MODULUS: Fp = Fp([
 const MULTIPLICATIVE_GENERATOR: Fp = Fp::from_raw([0x06, 0x00, 0x00, 0x00]);
 
 /// The modulus as u32 limbs.
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 const MODULUS_LIMBS_32: [u32; 8] = [
     0xffff_ffff,
     0xffff_ffff,
@@ -148,9 +148,9 @@ impl_from_u64!(Fp, R2);
 field_arithmetic!(Fp, MODULUS, INV, dense);
 impl_sum_prod!(Fp);
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(target_pointer_width = "64", not(feature = "force-u32")))]
 field_bits!(Fp, MODULUS);
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 field_bits!(Fp, MODULUS, MODULUS_LIMBS_32);
 
 impl Fp {

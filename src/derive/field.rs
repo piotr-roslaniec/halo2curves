@@ -714,7 +714,7 @@ macro_rules! field_specific {
 
 #[macro_export]
 macro_rules! field_bits {
-    // For #[cfg(target_pointer_width = "64")]
+    // For #[cfg(all(target_pointer_width = "64", not(feature = "force-u32")))]
     ($field:ident, $modulus:ident) => {
         #[cfg(feature = "bits")]
         #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]
@@ -739,7 +739,7 @@ macro_rules! field_bits {
             }
         }
     };
-    // For #[cfg(not(target_pointer_width = "64"))]
+    // For #[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
     ($field:ident, $modulus:ident, $modulus_limbs_32:ident) => {
         #[cfg(feature = "bits")]
         #[cfg_attr(docsrs, doc(cfg(feature = "bits")))]

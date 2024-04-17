@@ -47,7 +47,7 @@ const MODULUS: Fp = Fp([
 ]);
 
 /// The modulus as u32 limbs.
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 const MODULUS_LIMBS_32: [u32; 14] = [
     0x00000001, 0x9ffffcd3, 0x0006b945, 0xa2a7e8c3, 0x8fadffd6, 0xe4a7a5fe, 0xda8a6c7b, 0x443f9a5c,
     0xf439266f, 0xa803ca76, 0x0d7f70e4, 0x0130e000, 0x00002400, 0x24000000,
@@ -197,9 +197,9 @@ impl_sum_prod!(Fp);
 impl_from_u64_7_limbs!(Fp, R2);
 field_arithmetic_7_limbs!(Fp, MODULUS, INV, sparse);
 
-#[cfg(target_pointer_width = "64")]
+#[cfg(all(target_pointer_width = "64", not(feature = "force-u32")))]
 field_bits_7_limbs!(Fp, MODULUS);
-#[cfg(not(target_pointer_width = "64"))]
+#[cfg(any(not(target_pointer_width = "64"), feature = "force-u32"))]
 field_bits_7_limbs!(Fp, MODULUS, MODULUS_LIMBS_32);
 
 extend_field_legendre!(Fp);
